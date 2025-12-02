@@ -47,7 +47,7 @@ body {
 }
 
 .disco .link {
-  width: 2rem;
+  width: 5dvh;
   padding: 1rem;
   position: absolute;
   top: 50%;
