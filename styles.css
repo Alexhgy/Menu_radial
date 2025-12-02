@@ -58,32 +58,48 @@ body {
   cursor: pointer;
 }
 
-.disco .link a span {
-  transform-origin: 100% 50%;
-  position: absolute;
-  left: -50%;
-  top: 35%;
-  opacity: 0;
-  transition: transform var(--delay-transition), opacity var(--delay-transition);
-}
-
-.disco .link:hover a span {
-  opacity: 1;
-  transform: translateX(-50%);
-}
-
 .disco .link a {
   width: 100%;
   color: var(--color-text);
   text-decoration: none;
 }
 
+.disco .link a span {
+  position: absolute;
+  text-align: right;
+  writing-mode: horizontal-tb;
+  font-size: 2.5dvh;
+  transform-origin: 100% 50%;
+  left: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: transform var(--delay-transition), opacity var(--delay-transition);
+}
+
+.disco .link:hover a span {
+  opacity: 1;
+  transform: translate(-100%, -50%);
+}
+
 .disco .link svg {
+  width: 100%;
+  height: 100%;
   transition: transform var(--delay-transition);
 }
 
 .disco .link:hover svg {
   transform: scale(1.1);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ###  EXPERIMENTAL ### */

@@ -1,8 +1,7 @@
 // ul
 const disco = document.querySelector(".disco");
 // ---
-const discoRadio = disco.getBoundingClientRect().width / 2;
-const discoPadding = Math.trunc(discoRadio * 0.016); // rem
+let discoRadio = disco.getBoundingClientRect().width / 2;
 // elementos li
 const links = document.querySelectorAll(".link");
 // nav
@@ -10,6 +9,7 @@ const layout = document.querySelector(".nav-layout");
 
 const total = links.length;
 const step = 30; /*360 / total*/
+
 let discoRotacion = 0;
 let scrollTimeout;
 let currentIndex = 0;
@@ -19,7 +19,7 @@ links.forEach((link, i) => {
 
   link.style.transform = `
     rotate(${angle}deg)
-    translate(${discoRadio - link.getBoundingClientRect().width}px)
+    translate(${Math.trunc(discoRadio - link.offsetWidth)}px)
     `;
 });
 
@@ -72,6 +72,23 @@ function focus() {
     link.style.opacity = i === currentIndex ? "1" : "0.2";
   });
 }
+
+// reposicionar los links al cambiar el alto del circulo
+window.addEventListener("resize", () => {
+  discoRadio = disco.getBoundingClientRect().width / 2;
+
+  links.forEach((link, i) => {
+    const angle = -i * step;
+
+    link.style.transform = `
+      rotate(${angle}deg)
+      translate(${Math.trunc(discoRadio - link.offsetWidth)}px)
+    `;
+  });
+
+  // const angle = currentIndex * step;
+  // disco.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+});
 
 // translate(calc(${discoRadio}px - ${discoPadding}rem))
 
