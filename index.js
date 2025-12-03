@@ -1,30 +1,42 @@
 // ul
 const disco = document.querySelector(".disco");
 // ---
-let discoRadio = disco.getBoundingClientRect().width / 2;
+let discoRadio = disco.offsetWidth / 2;
 // elementos li
 const links = document.querySelectorAll(".link");
 // nav
 const layout = document.querySelector(".nav-layout");
 
 const total = links.length;
-const step = 30; /*360 / total*/
+const step = 30;
 
-let discoRotacion = 0;
-let scrollTimeout;
+let angle = 0;
 let currentIndex = 0;
-
-links.forEach((link, i) => {
-  const angle = -i * step;
-
-  link.style.transform = `
-    rotate(${angle}deg)
-    translate(${Math.trunc(discoRadio - link.offsetWidth)}px)
-    `;
-});
-
 let touchStartY = 0;
 
+// abrir menu
+disco.addEventListener("click", () => {
+  let discoClase = disco.classList;
+  if (discoClase.contains("closed")) {
+    disco.classList.remove("closed");
+    disco.style.setProperty("--rotate", `${angle}deg`);
+    handleInput(0);
+    updateLinks();
+  } else {
+    disco.classList.add("closed");
+  }
+});
+
+// reposicionar los links al cambiar el alto del circulo
+window.addEventListener("resize", () => {
+  updateLinks();
+});
+
+// INICIO
+// ### CONTROLES DE SCROLL ###
+// ### CONTROLES DE SCROLL ###
+// ### CONTROLES DE SCROLL ###
+// rueda del mouse
 window.addEventListener("wheel", (e) => {
   const direction = Math.sign(e.deltaY);
   handleInput(direction);
@@ -47,11 +59,9 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "ArrowUp") handleInput(1);
 });
 
-// ===============================
-// LÓGICA UNIFICADA
-// ===============================
 function handleInput(direction) {
   if (direction === 0) return;
+  if (disco.classList.contains("closed")) return;
 
   const nextIndex = currentIndex + direction;
 
@@ -59,13 +69,17 @@ function handleInput(direction) {
 
   currentIndex = nextIndex;
 
-  const angle = currentIndex * step;
+  angle = currentIndex * step;
 
   disco.style.transition = "transform 0.3s ease-out";
-  disco.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+  disco.style.setProperty("--rotate", `${angle}deg`);
 
   focus();
 }
+// ### CONTROLES DE SCROLL ###
+// ### CONTROLES DE SCROLL ###
+// ### CONTROLES DE SCROLL ###
+// ### FIN
 
 function focus() {
   links.forEach((link, i) => {
@@ -73,46 +87,17 @@ function focus() {
   });
 }
 
-// reposicionar los links al cambiar el alto del circulo
-window.addEventListener("resize", () => {
-  discoRadio = disco.getBoundingClientRect().width / 2;
-
+function placingLinks() {
   links.forEach((link, i) => {
     const angle = -i * step;
-
     link.style.transform = `
       rotate(${angle}deg)
-      translate(${Math.trunc(discoRadio - link.offsetWidth)}px)
-    `;
+      translate(${Math.trunc(discoRadio - link.offsetWidth)}px, -50%)
+      `;
   });
+}
 
-  // const angle = currentIndex * step;
-  // disco.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-});
-
-// translate(calc(${discoRadio}px - ${discoPadding}rem))
-
-// controla el scroll para el menu circular
-// window.addEventListener("wheel", (e) => {
-//   focus();
-//   const direction = Math.sign(e.deltaY);
-
-//   const nextIndex = currentIndex + direction;
-
-//   if (nextIndex < 0) return;
-
-//   if (nextIndex >= total) return;
-
-//   currentIndex = nextIndex;
-
-//   const angle = currentIndex * step;
-//   disco.style.transition = "transform 0.3s ease-out";
-//   disco.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-//   focus();
-// });
-
-// function focus() {
-//   links.forEach((link, i) => {
-//     link.style.opacity = i === currentIndex ? "1" : "0.2";
-//   });
-// }
+function updateLinks() {
+  discoRadio = disco.offsetWidth / 2;
+  placingLinks();
+}

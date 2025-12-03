@@ -2,13 +2,15 @@
   --color-bg: hsl(225, 80%, 5%);
   --color-text: hsl(0, 0%, 90%);
   --delay-transition: 300ms;
+  --center-element: translate(-50%, -50%);
+  --rotate: 0deg;
+  --scale: 0.2;
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -23,13 +25,20 @@ body {
   height: 200dvh;
 }
 
-/* .nav-layout .disco {
-  height: 20dvh;
+.disco.closed .link,
+.disco.closed .link:nth-child(1) {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 100ms ease, visibility 0s linear 100ms;
 }
 
-.nav-layout .disco .link {
-  visibility: hidden;
-} */
+.disco:not(.closed) {
+  --scale: 1;
+}
+
+.disco:not(.closed)::before {
+  transform: scale(0.3);
+}
 
 .disco {
   position: fixed;
@@ -41,21 +50,50 @@ body {
   height: 90dvh;
   border-radius: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
   list-style: none;
   overflow: hidden;
+
+  transform: var(--center-element) rotate(var(--rotate)) scale(var(--scale));
+  transition: transform 300ms;
+}
+
+.disco.closed:hover {
+  transform: var(--center-element) scale(0.3);
+}
+
+.disco::before {
+  content: "";
+  display: block;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: translateX(-100%);
+  background: hsl(50, 100%, 40%);
+  transition: transform 300ms;
+  transform-box: viewport;
+}
+
+.disco.closed:hover::before {
+  transform: translateX(0);
 }
 
 .disco .link {
+  z-index: 100;
   width: 5dvh;
   padding: 1rem;
   position: absolute;
   top: 50%;
   left: 50%;
   transform-origin: 0 0;
+  transform: var(--center-element);
   opacity: 0.2;
   transition: transform var(--delay-transition), opacity var(--delay-transition);
   cursor: pointer;
+}
+
+.disco .link:nth-child(1) {
+  opacity: 1;
 }
 
 .disco .link a {
@@ -90,16 +128,6 @@ body {
 
 .disco .link:hover svg {
   transform: scale(1.1);
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* ###  EXPERIMENTAL ### */
